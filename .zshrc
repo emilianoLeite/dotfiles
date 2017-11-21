@@ -2,9 +2,19 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/codus/.oh-my-zsh
+export ZSH="$HOME/.oh-my-zsh"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+export PATH="$PATH:/usr/local/sbin"
+
 export NVM_DIR="$HOME/.nvm"
   . "/usr/local/opt/nvm/nvm.sh"
+
+# export NVM_DIR="$HOME/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -38,7 +48,7 @@ ZSH_THEME="emiliano"
 # ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
-# COMPLETION_WAITING_DOTS="true"
+COMPLETION_WAITING_DOTS="true"
 
 # Uncomment the following line if you want to disable marking untracked files
 # under VCS as dirty. This makes repository status check for large repositories
@@ -104,21 +114,24 @@ alias agraph='cd ~/Projects/admin-graphql'
 
 alias build-next-release='npm run build -- --env-path .env.next-release'
 
-alias delete-merged='git def && git pull && git branch --merged | egrep -v "(^\*|master|dev|release|codus)" | xargs git branch -d && git fetch --all --prune'
+alias delete-merged='ggl && git branch --merged | egrep -v "(^\*|master|dev|release|codus)" | xargs git branch -d && git fetch --all --prune'
 alias newmr='git open new_mr'
 alias alignbr='ggl && git fetch origin && git merge origin/preview && git merge origin/staging'
 alias prune='git fetch origin --prune'
 
 # =====  FUNCTIONS  =====
 run_setup() {
-  printf "\n -- Do you wish to run full setup? (y/n): "
+  printf "\n ⚙ Do you wish to run full setup? (y/n): "
   read answer
   if [ $answer = 'y' ] || [ $answer = 'Y' ]
   then
     install_rvm
     install_highlighting_plugin
     install_autosuggestions_plugin
-    echo 'Setup successful'
+    create_git_aliases
+    echo "\n✅  SETUP SUCCESSFUL ✅ \n"
+  else
+    echo "\n❌  SETUP ABORTED ❌ \n"
   fi
 }
 
@@ -131,19 +144,21 @@ install_highlighting_plugin() {
 install_autosuggestions_plugin() {
   git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 }
+create_git_aliases() {
+  git config --global pager.diff false
+  git config --global alias.co checkout
+  git config --global alias.br branch
+  git config --global alias.ci commit
+  git config --global alias.st status
+  git config --global alias.st s
+  git config --global alias.amend "ci --amend --no-edit"
+}
 
 hpush () {
   branch=$(git symbolic-ref -q --short HEAD)
   git push $1 $branch:master
 }
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-export PATH="$PATH:/usr/local/sbin"
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 deploy-front-next-release() {
   if [ -f .env.next-release ]
   then
