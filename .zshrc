@@ -102,7 +102,6 @@ alias cgraph='cd ~/Projects/core-graphql'
 alias agraph='cd ~/Projects/admin-graphql'
 
 alias build-next-release='npm run build -- --env-path .env.next-release'
-alias deploy-front-next-release='build-next-release && cp .env .env.tmp && cp .env.next-release .env && npm run upload-to-s3 && cp .env.tmp .env && rm .env.tmp'
 
 alias delete-merged='git def && git pull && git branch --merged | egrep -v "(^\*|master|dev|release|codus)" | xargs git branch -d && git fetch --all --prune'
 alias newmr='git open new_mr'
@@ -144,3 +143,16 @@ export PATH="$PATH:/usr/local/sbin"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+deploy-front-next-release() {
+  if [ -f .env.next-release ]
+  then
+    build-next-release
+    cp .env .env.tmp
+    cp .env.next-release .env
+    npm run upload-to-s3
+    cp .env.tmp .env
+    rm .env.tmp
+  else
+    echo '.env.next-release does not exist'
+  fi
+}
