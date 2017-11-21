@@ -11,8 +11,9 @@ export NVM_DIR="$HOME/.nvm"
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 # ZSH_THEME="robbyrussell"
 # ZSH_THEME="avit"
-ZSH_THEME="miloshadzic"
+# ZSH_THEME="miloshadzic"
 # ZSH_THEME="agnoster"
+ZSH_THEME="emiliano"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
