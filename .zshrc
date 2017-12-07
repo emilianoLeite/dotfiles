@@ -125,6 +125,7 @@ run_setup() {
   read answer
   if [ $answer = 'y' ] || [ $answer = 'Y' ]
   then
+    install_homebrew
     install_rvm
     install_highlighting_plugin
     install_autosuggestions_plugin
@@ -135,6 +136,9 @@ run_setup() {
   fi
 }
 
+install_homebrew() {
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+}
 install_rvm() {
   \curl -sSL https://get.rvm.io | bash -s stable --ruby
 }
