@@ -127,6 +127,7 @@ run_setup() {
   then
     install_homebrew
     install_rvm
+    install_node
     install_highlighting_plugin
     install_autosuggestions_plugin
     create_git_aliases
@@ -141,6 +142,9 @@ install_homebrew() {
 }
 install_rvm() {
   \curl -sSL https://get.rvm.io | bash -s stable --ruby
+}
+install_node() {
+  brew install node
 }
 install_highlighting_plugin() {
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
