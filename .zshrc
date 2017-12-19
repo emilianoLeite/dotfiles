@@ -131,6 +131,7 @@ run_setup() {
     install_highlighting_plugin
     install_autosuggestions_plugin
     create_git_aliases
+    set_global_gitignore
     echo "\n✅  SETUP SUCCESSFUL ✅ \n"
   else
     echo "\n❌  SETUP ABORTED ❌ \n"
@@ -153,13 +154,15 @@ install_autosuggestions_plugin() {
   git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
 }
 create_git_aliases() {
-  git config --global pager.diff false
   git config --global alias.co checkout
   git config --global alias.br branch
   git config --global alias.ci commit
   git config --global alias.st status
   git config --global alias.st s
   git config --global alias.amend "ci --amend --no-edit"
+}
+set_global_gitignore() {
+  git config --global core.excludesfile ~/.global_gitignore
 }
 
 hpush () {
