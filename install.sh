@@ -10,3 +10,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/mas
 # oh-my-zsh config
 cp ./.zshrc ~/
 cp emiliano.zsh-theme ~/.oh-my-zsh/themes/
+
+# install additional utilities
+source ~/.zshrc
+run_setup
