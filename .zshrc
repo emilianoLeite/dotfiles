@@ -8,8 +8,8 @@ export ZSH="$HOME/.oh-my-zsh"
 export PATH="$PATH:$HOME/.rvm/bin"
 export PATH="$PATH:/usr/local/sbin"
 
-export NVM_DIR="$HOME/.nvm"
-  . "/usr/local/opt/nvm/nvm.sh"
+# export NVM_DIR="$HOME/.nvm"
+#   . "/usr/local/opt/nvm/nvm.sh"
 
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -98,26 +98,9 @@ source $ZSH/oh-my-zsh.sh
 #
 
 alias p='cd ~/projects/'
-alias cerc='cd ~/Projects/core/'
-alias cerc-f='cd ~/Projects/frontend'
-alias cerc-a='cd ~/Projects/admin-panel'
-alias cerc-g='cd ~/Projects/cerc-client'
-alias cerc-d='cd ~/Projects/documentacao-api'
-alias cerc-i='cd ~/Projects/integra-cnab'
-alias cerc-dash='cd ~/Projects/dashboard'
-alias cerc-test='cd ~/Projects/cerc-client-test'
-alias vsc='cd ~/Projects/VSCodus'
-alias playbook='cd ~/Projects/playbook-dev'
-alias blog='cd ~/Projects/blog'
-alias cgraph='cd ~/Projects/core-graphql'
-alias agraph='cd ~/Projects/admin-graphql'
-
-alias build-next-release='npm run build -- --env-path .env.next-release'
 
 alias delete-merged='ggl && git branch --merged | egrep -v "(^\*|master|dev|release|codus)" | xargs git branch -d && git fetch --all --prune'
 alias newmr='git open new_mr'
-alias alignbr='ggl && git fetch origin && git merge origin/preview && git merge origin/staging'
-alias prune='git fetch origin --prune'
 
 # =====  FUNCTIONS  =====
 run_setup() {
@@ -125,9 +108,9 @@ run_setup() {
   read answer
   if [ $answer = 'y' ] || [ $answer = 'Y' ]
   then
-    install_homebrew
     install_rvm
     install_node
+    install_yarn
     install_highlighting_plugin
     install_autosuggestions_plugin
     create_git_aliases
@@ -138,14 +121,14 @@ run_setup() {
   fi
 }
 
-install_homebrew() {
-  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-}
 install_rvm() {
   \curl -sSL https://get.rvm.io | bash -s stable --ruby
 }
 install_node() {
   brew install node
+}
+install_yarn() {
+  brew install yarn
 }
 install_highlighting_plugin() {
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
@@ -168,18 +151,4 @@ set_global_gitignore() {
 hpush () {
   branch=$(git symbolic-ref -q --short HEAD)
   git push $1 $branch:master
-}
-
-deploy-front-next-release() {
-  if [ -f .env.next-release ]
-  then
-    build-next-release
-    cp .env .env.tmp
-    cp .env.next-release .env
-    npm run upload-to-s3
-    cp .env.tmp .env
-    rm .env.tmp
-  else
-    echo '.env.next-release does not exist'
-  fi
 }
