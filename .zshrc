@@ -113,6 +113,7 @@ run_setup() {
     install_yarn
     install_highlighting_plugin
     install_autosuggestions_plugin
+    install_custom_gitopen
     create_git_aliases
     set_global_gitignore
     echo "\n✅  SETUP SUCCESSFUL ✅ \n"
@@ -135,6 +136,9 @@ install_highlighting_plugin() {
 }
 install_autosuggestions_plugin() {
   git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
+}
+install_custom_gitopen() {
+  git clone git@github.com:emilianoLeite/git-open.git $ZSH_CUSTOM/plugins/git-open
 }
 create_git_aliases() {
   git config --global alias.co checkout
