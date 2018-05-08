@@ -109,6 +109,7 @@ run_setup() {
   read answer
   if [ $answer = 'y' ] || [ $answer = 'Y' ]
   then
+    install_autojump
     install_rvm
     install_node
     install_yarn
@@ -123,6 +124,9 @@ run_setup() {
   fi
 }
 
+install_autojump() {
+  brew install autojump
+}
 install_rvm() {
   \curl -sSL https://get.rvm.io | bash -s stable --ruby
 }
@@ -152,7 +156,6 @@ create_git_aliases() {
 set_global_gitignore() {
   git config --global core.excludesfile ~/.global_gitignore
 }
-
 hpush () {
   branch=$(git symbolic-ref -q --short HEAD)
   git push $1 $branch:master
