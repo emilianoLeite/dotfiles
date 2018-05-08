@@ -101,6 +101,7 @@ alias p='cd ~/projects/'
 
 alias delete-merged='ggl && git branch --merged | egrep -v "(^\*|master|dev|release|codus)" | xargs git branch -d && git fetch --all --prune'
 alias newmr='git open new_mr'
+alias gpmr="git symbolic-ref -q --short HEAD | read branch ; git push origin \$branch |& tee temp.txt; cat temp.txt | grep -o 'http.*' | read url; open \$url; rm -f temp.txt"
 
 # =====  FUNCTIONS  =====
 run_setup() {
