@@ -150,6 +150,7 @@ create_git_aliases() {
   git config --global alias.amend "commit --amend --no-edit"
 }
 set_global_gitignore() {
+  cp ./.global_gitignore ~/.global_gitignore
   git config --global core.excludesfile ~/.global_gitignore
 }
 hpush () {
