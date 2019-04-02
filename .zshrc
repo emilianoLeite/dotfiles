@@ -112,7 +112,6 @@ run_setup() {
     install_autojump
     install_rvm
     install_node
-    install_yarn
     install_highlighting_plugin
     install_autosuggestions_plugin
     install_custom_gitopen
@@ -132,9 +131,6 @@ install_rvm() {
 }
 install_node() {
   brew install node
-}
-install_yarn() {
-  brew install yarn
 }
 install_highlighting_plugin() {
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
