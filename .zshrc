@@ -67,7 +67,12 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git git-open zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(
+  git
+  git-open
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -112,9 +117,7 @@ run_setup() {
     install_autojump
     install_rvm
     install_node
-    install_highlighting_plugin
-    install_autosuggestions_plugin
-    install_custom_gitopen
+    install_oh-my-zsh_plugins
     create_git_aliases
     set_global_gitignore
     echo "\n✅  SETUP SUCCESSFUL ✅ \n"
@@ -131,6 +134,11 @@ install_rvm() {
 }
 install_node() {
   brew install node
+}
+install_oh-my-zsh_plugins() {
+  install_highlighting_plugin
+  install_autosuggestions_plugin
+  install_custom_gitopen
 }
 install_highlighting_plugin() {
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
