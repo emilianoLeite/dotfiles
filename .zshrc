@@ -116,7 +116,6 @@ run_setup() {
   read answer
   if [ $answer = 'y' ] || [ $answer = 'Y' ]
   then
-    install_autojump
     install_rvm
     install_node
     install_oh-my-zsh_plugins
@@ -130,9 +129,6 @@ run_setup() {
   fi
 }
 
-install_autojump() {
-  brew install autojump
-}
 install_rvm() {
   \curl -sSL https://get.rvm.io | bash -s stable --ruby
 }
