@@ -108,6 +108,7 @@ alias p='cd ~/projects/'
 alias delete-merged='ggl && git branch --merged | egrep -v "(^\*|master|dev|release|codus)" | xargs git branch -d && git fetch --all --prune'
 alias newmr='git open new_mr'
 alias gpmr="git symbolic-ref -q --short HEAD | read branch ; git push origin \$branch |& tee temp.txt; cat temp.txt | grep -o 'http.*' | read url; open \$url; rm -f temp.txt"
+alias yas="yarn start"
 
 # =====  FUNCTIONS  =====
 run_setup() {
@@ -120,6 +121,7 @@ run_setup() {
     install_node
     install_oh-my-zsh_plugins
     install_spaceship_prompt
+    install_yarn
     create_git_aliases
     set_global_gitignore
     echo "\n✅  SETUP SUCCESSFUL ✅ \n"
@@ -145,6 +147,9 @@ install_oh-my-zsh_plugins() {
 install_spaceship_prompt() {
   git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt"
   ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
+}
+install_yarn() {
+  brew install yarn
 }
 install_highlighting_plugin() {
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
