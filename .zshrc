@@ -172,3 +172,7 @@ hpush () {
   branch=$(git symbolic-ref -q --short HEAD)
   git push $1 $branch:master
 }
+# short for fixup_and_rebase
+frb() {
+  git commit --fixup=$1 && git rebase -i --autosquash $1~
+}
