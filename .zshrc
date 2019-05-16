@@ -109,6 +109,7 @@ alias delete-merged='ggl && git branch --merged | egrep -v "(^\*|master|dev|rele
 alias newmr='git open new_mr'
 alias gpmr="git symbolic-ref -q --short HEAD | read branch ; git push origin \$branch |& tee temp.txt; cat temp.txt | grep -o 'http.*' | read url; open \$url; rm -f temp.txt"
 alias yas="yarn start"
+alias srvm="source /etc/profile.d/rvm.sh"
 
 # =====  FUNCTIONS  =====
 run_setup() {
@@ -176,3 +177,6 @@ hpush () {
 frb() {
   git commit --fixup=$1 && git rebase -i --autosquash $1~
 }
+
+# Source RVM (this is commented because it fucks up the autocomplete)
+# source /etc/profile.d/rvm.sh
