@@ -122,6 +122,7 @@ run_setup() {
     install_oh-my-zsh_plugins
     install_spaceship_prompt
     install_yarn
+    install_asdf
     create_git_aliases
     set_global_gitignore
     echo "\n✅  SETUP SUCCESSFUL ✅ \n"
@@ -147,6 +148,12 @@ install_spaceship_prompt() {
 }
 install_yarn() {
   brew install yarn
+}
+install_asdf() {
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.7.1
+
+  echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.zshrc
+  echo -e '\n. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc
 }
 install_highlighting_plugin() {
   git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
