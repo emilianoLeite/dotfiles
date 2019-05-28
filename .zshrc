@@ -107,7 +107,7 @@ alias p='cd ~/projects/'
 
 alias delete-merged='ggl && git branch --merged | egrep -v "(^\*|master|dev|release|codus)" | xargs git branch -d && git fetch --all --prune'
 alias newmr='git open new_mr'
-alias gpmr="git symbolic-ref -q --short HEAD | read branch ; git push origin \$branch |& tee temp.txt; cat temp.txt | grep -o 'http.*' | read url; open \$url; rm -f temp.txt"
+
 alias yas="yarn start"
 alias srvm="source /etc/profile.d/rvm.sh"
 
@@ -184,6 +184,24 @@ hpush () {
 frb() {
   git commit --fixup=$1 && git rebase -i --autosquash $1~
 }
+gpmr() {
+  branch=$(git symbolic-ref -q --short HEAD)
+  result=$(git push origin $branch 2>&1)
+  url=$(echo "$result" | grep -o 'http\S*')
+  if [ $url ]; then
+    case "$OSTYPE" in
+      darwin*)  open $url ;;
+      linux*)   xdg-open $url ;;
+      msys*)    start $url ;;
+      *)        echo "Unknown OS: $OSTYPE" ;;
+    esac
+    echo $result
+    echo "Opened MR in your browser."
+  else
+    echo $result
+  fi
+}
+
 
 # Source RVM (this is commented because it fucks up the autocomplete)
 # source /etc/profile.d/rvm.sh
