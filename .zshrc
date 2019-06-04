@@ -106,7 +106,6 @@ source $ZSH/oh-my-zsh.sh
 alias p='cd ~/projects/'
 
 alias delete-merged='ggl && git branch --merged | egrep -v "(^\*|master|dev|release|codus)" | xargs git branch -d && git fetch --all --prune'
-alias newmr='git open new_mr'
 
 alias yas="yarn start"
 alias srvm="source /etc/profile.d/rvm.sh"
