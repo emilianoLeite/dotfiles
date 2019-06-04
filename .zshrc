@@ -169,7 +169,6 @@ create_git_aliases() {
   git config --global alias.br branch
   git config --global alias.ci commit
   git config --global alias.st status
-  git config --global alias.st s
   git config --global alias.amend "commit --amend --no-edit"
 }
 set_global_gitignore() {
