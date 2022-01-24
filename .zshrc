@@ -4,17 +4,6 @@
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
-export PATH="$PATH:/usr/local/sbin"
-
-# export NVM_DIR="$HOME/.nvm"
-#   . "/usr/local/opt/nvm/nvm.sh"
-
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -24,7 +13,17 @@ export PATH="$PATH:/usr/local/sbin"
 # ZSH_THEME="miloshadzic"
 # ZSH_THEME="agnoster"
 ZSH_THEME="spaceship"
-DEFAULT_USER="codus"
+DEFAULT_USER="emilianoleite"
+SPACESHIP_GIT_PREFIX=""
+SPACESHIP_PACKAGE_SHOW='false'
+SPACESHIP_DOCKER_SHOW='false'
+SPACESHIP_KUBECTL_SHOW='false'
+SPACESHIP_KUBECTL_VERSION_SHOW='false'
+SPACESHIP_KUBECONTEXT_SHOW='false'
+SPACESHIP_TERRAFORM_SHOW='false'
+SPACESHIP_NODE_PREFIX=''
+SPACESHIP_RUBY_PREFIX=''
+SPACESHIP_BATTERY_THRESHOLD='50'
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -73,6 +72,7 @@ plugins=(
   git-open
   zsh-autosuggestions
   zsh-syntax-highlighting
+  docker
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -103,12 +103,14 @@ source $ZSH/oh-my-zsh.sh
 # For a full list of active aliases, run `alias`.
 #
 
-alias p='cd ~/projects/'
-
+alias delete-all-local-branches='git branch | egrep -v "(^\*|master)" | xargs git branch -D'
 alias delete-merged='ggl && git branch --merged | egrep -v "(^\*|master|dev|release|codus)" | xargs git branch -d && git fetch --all --prune'
-
 alias yas="yarn start"
-alias srvm="source /etc/profile.d/rvm.sh"
+alias yat="yarn test"
+alias yatch="yarn test --watch"
+alias gview="gh pr view -w"
+alias gcreate="gh pr create -w"
+alias gpmr="ggp && gcreate"
 
 # =====  FUNCTIONS  =====
 run_setup() {
@@ -116,11 +118,7 @@ run_setup() {
   read answer
   if [ $answer = 'y' ] || [ $answer = 'Y' ]
   then
-    install_rvm
-    install_node
-    install_oh-my-zsh_plugins
-    install_spaceship_prompt
-    install_yarn
+    install_nvm
     install_asdf
     create_git_aliases
     set_global_gitignore
@@ -130,38 +128,23 @@ run_setup() {
   fi
 }
 
+install_nvm() {
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+}
 install_rvm() {
   \curl -sSL https://get.rvm.io | bash -s stable --ruby
 }
-install_node() {
-  brew install node
-}
-install_oh-my-zsh_plugins() {
-  install_highlighting_plugin
-  install_autosuggestions_plugin
-  install_custom_gitopen
-}
-install_spaceship_prompt() {
-  git clone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt"
-  ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
-}
-install_yarn() {
-  brew install yarn
-}
+
+
+
 install_asdf() {
-  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.7.1
+  git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.7.6
 
   echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.zshrc
   echo -e '\n. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc
 }
-install_highlighting_plugin() {
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting
-}
-install_autosuggestions_plugin() {
-  git clone git://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
-}
-install_custom_gitopen() {
-  git clone git@github.com:emilianoLeite/git-open.git $ZSH_CUSTOM/plugins/git-open
+install_jabba(){
+  curl -sL https://github.com/shyiko/jabba/raw/master/install.sh | bash && . ~/.jabba/jabba.sh
 }
 create_git_aliases() {
   git config --global alias.co checkout
@@ -174,32 +157,55 @@ set_global_gitignore() {
   cp ./.global_gitignore ~/.global_gitignore
   git config --global core.excludesfile ~/.global_gitignore
 }
-hpush () {
-  branch=$(git symbolic-ref -q --short HEAD)
-  git push $1 $branch:master
-}
 # short for fixup_and_rebase
 frb() {
   git commit --fixup=$1 && git rebase -i --autosquash $1~
 }
-gpmr() {
-  branch=$(git symbolic-ref -q --short HEAD)
-  result=$(git push origin $branch 2>&1)
-  url=$(echo "$result" | grep -o 'http\S*')
-  if [ $url ]; then
-    case "$OSTYPE" in
-      darwin*)  open $url ;;
-      linux*)   xdg-open $url ;;
-      msys*)    start $url ;;
-      *)        echo "Unknown OS: $OSTYPE" ;;
-    esac
-    echo $result
-    echo "Opened MR in your browser."
-  else
-    echo $result
-  fi
+cj() {
+  j $1 && code .
 }
+uncommited_changes() {
+  echo 'repos with uncommitted changes: '
+  for dir in * ; do
+    if [[ -d $dir  ]] && [[ -d $dir/.git ]]; then
+      (
+        cd $dir
+        # do we have any change on repo?
+        if [ 1 -ne `git status | grep 'nothing to commit' | wc -l` ]; then
+          echo $dir
+          git status -s
+        fi
+      );
+    fi
+  done
 
+  echo
+  echo 'repos with unpushed changes: '
 
-# Source RVM (this is commented because it fucks up the autocomplete)
-# source /etc/profile.d/rvm.sh
+  for dir in * ; do
+    if [[ -d $dir  ]] && [[ -d $dir/.git ]]; then
+      (
+        cd $dir
+        # do we have any unpushed commit on repo?
+        if [ 0 -ne `git status | grep 'Your branch is ahead of' | wc -l` ]; then
+          echo $dir
+        fi
+      );
+    fi
+  done
+
+  echo
+  echo 'repos on feature-branches: '
+
+  for dir in * ; do
+    if [[ -d $dir  ]] && [[ -d $dir/.git ]]; then
+      (
+        cd $dir
+        # are we on master branch?
+        if [ 1 -ne `git status | grep 'On branch master' | wc -l` ]; then
+          echo $dir": "$(git rev-parse --abbrev-ref HEAD)
+        fi
+      );
+    fi
+  done
+}
