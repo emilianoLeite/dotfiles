@@ -14,8 +14,6 @@ My humble OS X setup
     cd dotfiles
     ```
 
-3. Execute `install.sh`
+3. Execute `install-linux.sh` or `install-mac.sh`
 
-    ```bash
-    ./install.sh
-    ```
+4. You're done ✅
