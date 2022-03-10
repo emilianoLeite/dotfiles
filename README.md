@@ -1,5 +1,8 @@
 # Emiliano's dotfiles
-My humble OS X setup
+My humble dotfile setup
+
+## Deprecated, use [Formation](https://github.com/emilianoLeite/formation/tree/emiliano) instead
+
 
 ## Installation
 1. Clone this repo
